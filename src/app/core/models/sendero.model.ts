@@ -27,3 +27,18 @@ export interface SenderoDetalle extends SenderoResumen {
   cantidadResenas: number;
   imagenes: ImagenSendero[];
 }
+
+export interface PaginatedResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  number: number;
+}
+
+export interface SenderoRequest {
+  nombre: string;
+  descripcion: string;
+  dificultad: 'FACIL' | 'MODERADO' | 'DIFICIL';
+  estadoId: number;
+  coordenadas: number[][];
+}
