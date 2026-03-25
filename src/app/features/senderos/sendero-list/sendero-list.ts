@@ -19,14 +19,11 @@ export class SenderoList implements OnInit {
   ngOnInit() {
     this.senderoService.getSenderos().subscribe({
       next: (response) => {
-  console.log('response:', response);
-  this.senderos = response.content;
-  this.cargando.set(false);
-  console.log('cargando:', this.cargando());
-},
+        this.senderos = response.content;
+        this.cargando.set(false);
+      },
       error: (err) => {
         console.error(err);
-          this.cargando.set(false);
       }
     });
   }
