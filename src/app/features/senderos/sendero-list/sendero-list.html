@@ -1,7 +1,8 @@
+<app-navbar />
 <div class="senderos-container">
   @if (cargando()) {
     <mat-spinner />
-  }
+  } @else {
     <mat-card class="header-card">
       <mat-card-header>
         <mat-card-title>Senderos Tandil</mat-card-title>
@@ -23,4 +24,5 @@
         </mat-card>
       }
     </div>
+  }
 </div>
