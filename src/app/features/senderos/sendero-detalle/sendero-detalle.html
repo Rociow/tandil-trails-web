@@ -1,0 +1,17 @@
+<app-navbar></app-navbar>
+
+<div class="detalle-container">
+    <div class="card-info">
+        @if (sendero && sendero.imagenes && sendero.imagenes.length > 0) {
+        <img [src]="sendero.imagenes[0].url" alt="imagen del sendero" class="card-imagen">
+        }
+        <h2>{{ sendero?.nombre }}</h2>
+        <p>{{ sendero?.descripcion }}</p>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Distancia:</strong> {{ sendero?.longitud }} km</li>
+            <li class="list-group-item"><strong>Dificultad:</strong> {{ sendero?.dificultad }}</li>
+            <li class="list-group-item"><strong>Estado del sendero:</strong> {{ sendero?.estado }}</li>
+        </ul>
+    </div>
+    <div id="map"></div>
+</div>

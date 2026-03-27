@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { SenderoService } from '../../../core/services/sendero';
 import { Navbar } from '../../../shared/navbar/navbar';
+import { Router } from '@angular/router';
 import * as L from 'leaflet';
 
 @Component({
@@ -10,7 +11,7 @@ import * as L from 'leaflet';
   styleUrl: './home.scss',
 })
 export class Home implements OnInit, AfterViewInit {
-  constructor(private senderoService: SenderoService) { }
+  constructor(private senderoService: SenderoService, private router: Router) { }
 
   private map: any;
   private senderos: any[] = [];
@@ -50,8 +51,12 @@ export class Home implements OnInit, AfterViewInit {
     this.senderos.forEach((sendero) => {
       L.marker([sendero.latitud, sendero.lon])
         .addTo(this.map)
-        .bindPopup(`<b>${sendero.nombre}</b><br>${sendero.dificultad}`);
+        .bindPopup(`<b>${sendero.nombre}</b><br>${sendero.dificultad}`)
+        .on('click', () => {
+          this.router.navigate(['/sendero', sendero.id]);
+        });
     });
+
   }
 
 }

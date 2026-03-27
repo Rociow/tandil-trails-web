@@ -10,7 +10,6 @@ export interface Sendero {
     dificultad: 'FACIL' | 'MEDIA' | 'DIFICIL';
     estado: EstadoSendero;
 }
-
 export interface SenderoResumen {
   id: number;
   nombre: string;
@@ -18,9 +17,18 @@ export interface SenderoResumen {
   longitud: number;
   dificultad: 'FACIL' | 'MODERADO' | 'DIFICIL';
   estado: EstadoSendero;
+  latitud: number;
+  lon: number;
+  imagenUrl: string | null;
 }
 
-export interface SenderoDetalle extends SenderoResumen {
+export interface SenderoDetalle {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  longitud: number;
+  dificultad: 'FACIL' | 'MODERADO' | 'DIFICIL';
+  estado: string;
   coordenadas: number[][];
   waypoints: Waypoint[];
   promedioResenas: number;
