@@ -29,7 +29,7 @@ export class Login {
     this.authService.login(this.form.value as any).subscribe({
       next: (response) => {
         localStorage.setItem('token', response.token);
-        this.router.navigate(['/senderos']);
+        this.router.navigate(['/home']);
       },
       error: (err) => {
         console.error(err);

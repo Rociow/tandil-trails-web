@@ -1,28 +1,18 @@
 <app-navbar></app-navbar>
 <div class="senderos-container">
   @if (cargando()) {
-    <mat-spinner />
+  <mat-spinner />
   } @else {
-    <mat-card class="header-card">
-      <mat-card-header>
-        <mat-card-title>Senderos Tandil</mat-card-title>
-      </mat-card-header>
-    </mat-card>
+  <mat-card class="header-card">
+    <mat-card-header>
+      <mat-card-title>Senderos Tandil</mat-card-title>
+    </mat-card-header>
+  </mat-card>
 
-    <div class="senderos-list">
-      @for (sendero of senderos; track sendero.id) {
-        <mat-card class="sendero-card">
-          <mat-card-header>
-            <mat-card-title>{{ sendero.nombre }}</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p>{{ sendero.descripcion }}</p>
-            <p>Longitud: {{ sendero.longitud }} km</p>
-            <p>Dificultad: {{ sendero.dificultad }}</p>
-            <p>Estado: {{ sendero.estado.nombre }}</p>
-          </mat-card-content>
-        </mat-card>
-      }
-    </div>
+  <div class="senderos-list">
+    @for (sendero of senderos; track sendero.id) {
+    <app-sendero-card [sendero]="sendero" />
+    }
+  </div>
   }
 </div>

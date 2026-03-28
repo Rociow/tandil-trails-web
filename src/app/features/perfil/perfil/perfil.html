@@ -1,0 +1,38 @@
+<app-navbar></app-navbar>
+
+<div class="perfil-container">
+  <div class="perfil-info">
+    @if (usuario?.avatarUrl) {
+      <img [src]="usuario!.avatarUrl" alt="avatar" class="avatar">
+    } @else {
+      <div class="avatar-placeholder">{{ usuario?.username?.charAt(0)?.toUpperCase() }}</div>
+    }
+    <h2>{{ usuario?.username }}</h2>
+    <p>{{ usuario?.email }}</p>
+    <p class="miembro">Miembro desde {{ usuario?.createdAt | date:'MMMM yyyy' }}</p>
+  </div>
+
+  <div class="perfil-listas">
+    <h3>❤️ Favoritos</h3>
+    @if (usuario?.favoritos?.length === 0) {
+      <p>No tenés senderos favoritos todavía.</p>
+    } @else {
+      <div class="cards-grid">
+        @for (sendero of usuario?.favoritos; track sendero.id) {
+          <app-sendero-card [sendero]="sendero" />
+        }
+      </div>
+    }
+
+    <h3>✅ Visitados</h3>
+    @if (usuario?.visitados?.length === 0) {
+      <p>No marcaste ningún sendero como visitado todavía.</p>
+    } @else {
+      <div class="cards-grid">
+        @for (sendero of usuario?.visitados; track sendero.id) {
+          <app-sendero-card [sendero]="sendero" />
+        }
+      </div>
+    }
+  </div>
+</div>

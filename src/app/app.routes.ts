@@ -7,4 +7,5 @@ export const routes: Routes = [
   { path: 'senderos', loadComponent: () => import('./features/senderos/sendero-list/sendero-list').then(m => m.SenderoList) },
   { path: 'sendero/:id', loadComponent: () => import('./features/senderos/sendero-detalle/sendero-detalle').then(m => m.SenderoDetalle) },
   { path: '', loadComponent: () => import('./features/home/home/home').then(m => m.Home) },
+  { path: 'perfil', loadComponent: () => import('./features/perfil/perfil/perfil').then(m => m.Perfil), canActivate: [authGuard] },
 ];

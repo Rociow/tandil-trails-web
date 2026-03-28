@@ -23,4 +23,20 @@ export class UsuarioService {
   eliminarCuenta(): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/usuarios/me`);
   }
+
+  agregarFavorito(senderoId: number): Observable<void> {
+  return this.http.post<void>(`${this.apiUrl}/usuarios/me/favoritos/${senderoId}`, {});
+}
+
+eliminarFavorito(senderoId: number): Observable<void> {
+  return this.http.delete<void>(`${this.apiUrl}/usuarios/me/favoritos/${senderoId}`);
+}
+
+agregarVisitado(senderoId: number): Observable<void> {
+  return this.http.post<void>(`${this.apiUrl}/usuarios/me/visitados/${senderoId}`, {});
+}
+
+eliminarVisitado(senderoId: number): Observable<void> {
+  return this.http.delete<void>(`${this.apiUrl}/usuarios/me/visitados/${senderoId}`);
+}
 }
