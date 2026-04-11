@@ -4,10 +4,16 @@ import { SenderoService } from '../../../core/services/sendero';
 import { SenderoDetalle as SenderoDetalleModel } from '../../../core/models/sendero.model';
 import { Navbar } from '../../../shared/navbar/navbar';
 import L from 'leaflet';
+import { ResenaService } from '../../../core/services/resena';
+import { Resena } from '../../../core/models/resena.model';
+import { DatePipe, DecimalPipe } from '@angular/common';
+import { switchMap } from 'rxjs';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-sendero-detalle',
-  imports: [Navbar],
+  imports: [Navbar, DatePipe, DecimalPipe, ReactiveFormsModule],
   templateUrl: './sendero-detalle.html',
   styleUrl: './sendero-detalle.scss',
 })
@@ -15,9 +21,12 @@ export class SenderoDetalle implements OnInit, AfterViewInit {
 
   constructor(
     private senderoService: SenderoService,
+    private resenaService: ResenaService,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private fb: FormBuilder,
+    private authService: AuthService,
+  ) { }
 
   sendero: SenderoDetalleModel | null = null;
   cargando = true;
@@ -25,16 +34,33 @@ export class SenderoDetalle implements OnInit, AfterViewInit {
   private map: any;
   private mapReady = false;
   private dataReady = false;
+  resenas: Resena[] = [];
+  estaLogueado = false;
+  resenaForm!: FormGroup;
+  errorResena: string | null = null;
+
 
   ngOnInit(): void {
+    this.estaLogueado = this.authService.isLoggedIn();
+    this.resenaForm = this.fb.group({
+      comentario: ['', [Validators.required, Validators.minLength(10)]],
+      puntuacion: [null, [Validators.required, Validators.min(1), Validators.max(5)]]
+    });
+
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.senderoService.getSendero(id).subscribe({
-      next: (sendero) => {
+
+    this.senderoService.getSendero(id).pipe(
+      switchMap(sendero => {
         this.sendero = sendero;
-        this.cargando = false;
         this.dataReady = true;
-          this.cdr.detectChanges();
+        this.cdr.detectChanges();
         if (this.mapReady) this.dibujarRuta();
+        return this.resenaService.listar(id);
+      })
+    ).subscribe({
+      next: (resenas) => {
+        this.resenas = resenas;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error(err);
@@ -75,5 +101,30 @@ export class SenderoDetalle implements OnInit, AfterViewInit {
 
     // Zoomea automáticamente para mostrar toda la ruta
     this.map.fitBounds(polyline.getBounds());
+  }
+
+  enviarResena(): void {
+    console.log('enviarResena llamado');
+    console.log('form valid:', this.resenaForm.valid);
+    console.log('form value:', this.resenaForm.value);
+
+    if (this.resenaForm.invalid) return;
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.resenaService.crear(id, this.resenaForm.value).subscribe({
+      next: (resena) => {
+        this.resenas.push(resena);
+        this.resenaForm.reset();
+        this.errorResena = null;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        if (err.status === 409) {
+          this.errorResena = 'Ya dejaste una reseña en este sendero.';
+        } else {
+          this.errorResena = 'Error al enviar la reseña, intentá de nuevo.';
+        }
+        this.cdr.detectChanges();
+      }
+    });
   }
 }

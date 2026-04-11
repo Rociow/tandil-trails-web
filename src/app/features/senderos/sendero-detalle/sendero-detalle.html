@@ -12,6 +12,35 @@
             <li class="list-group-item"><strong>Dificultad:</strong> {{ sendero?.dificultad }}</li>
             <li class="list-group-item"><strong>Estado del sendero:</strong> {{ sendero?.estado }}</li>
         </ul>
+        <div class="resenas-section">
+            <h3>Reseñas ({{ sendero?.promedioResenas | number:'1.1-1' }} ⭐ · {{ sendero?.cantidadResenas }})</h3>
+
+            @for (resena of resenas; track resena.id) {
+            <div class="resena-card">
+                <div class="resena-header">
+                    <strong>{{ resena.username }}</strong>
+                    <span>{{ resena.puntuacion }} ⭐</span>
+                </div>
+                <p>{{ resena.comentario }}</p>
+                <small>{{ resena.fechaCreacion | date:'dd/MM/yyyy' }}</small>
+            </div>
+            } @empty {
+            <p>No hay reseñas todavía.</p>
+            }
+
+            @if (estaLogueado) {
+            <form [formGroup]="resenaForm" (ngSubmit)="enviarResena()" class="resena-form">
+                <textarea formControlName="comentario" placeholder="Escribí tu reseña..." rows="3"></textarea>
+                <input type="number" formControlName="puntuacion" placeholder="Puntuación (1-5)" min="1" max="5">
+                <button type="submit" [disabled]="resenaForm.invalid">Enviar reseña</button>
+                @if (errorResena) {
+                <p class="error-msg">{{ errorResena }}</p>
+                }
+            </form>
+            } @else {
+            <p><a routerLink="/login">Iniciá sesión</a> para dejar una reseña.</p>
+            }
+        </div>
     </div>
     <div id="map"></div>
 </div>
