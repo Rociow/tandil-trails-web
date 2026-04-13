@@ -12,7 +12,13 @@ import { MatButton } from '@angular/material/button';
   styleUrl: './navbar.scss',
 })
 export class Navbar {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
+
+  estaLogueado = false;
+
+  ngOnInit() {
+    this.estaLogueado = this.authService.isLoggedIn();
+  }
 
   logout() {
     this.authService.logout();

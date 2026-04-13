@@ -12,6 +12,16 @@
             <li class="list-group-item"><strong>Dificultad:</strong> {{ sendero?.dificultad }}</li>
             <li class="list-group-item"><strong>Estado del sendero:</strong> {{ sendero?.estado }}</li>
         </ul>
+        @if (estaLogueado) {
+        <div class="acciones">
+            <button (click)="toggleFavorito()">
+                {{ esFavorito ? '❤️ Quitar favorito' : '🤍 Agregar a favoritos' }}
+            </button>
+            <button (click)="toggleVisitado()">
+                {{ esVisitado ? '✅ Quitar visitado' : '☐ Marcar como visitado' }}
+            </button>
+        </div>
+        }
         <div class="resenas-section">
             <h3>Reseñas ({{ sendero?.promedioResenas | number:'1.1-1' }} ⭐ · {{ sendero?.cantidadResenas }})</h3>
 

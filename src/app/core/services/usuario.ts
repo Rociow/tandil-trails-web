@@ -39,4 +39,12 @@ agregarVisitado(senderoId: number): Observable<void> {
 eliminarVisitado(senderoId: number): Observable<void> {
   return this.http.delete<void>(`${this.apiUrl}/usuarios/me/visitados/${senderoId}`);
 }
+
+esFavorito(senderoId: number): Observable<boolean> {
+  return this.http.get<boolean>(`${this.apiUrl}/usuarios/me/favoritos/${senderoId}/existe`);
+}
+
+esVisitado(senderoId: number): Observable<boolean> {
+  return this.http.get<boolean>(`${this.apiUrl}/usuarios/me/visitados/${senderoId}/existe`);
+}
 }

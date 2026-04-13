@@ -7,9 +7,10 @@ import L from 'leaflet';
 import { ResenaService } from '../../../core/services/resena';
 import { Resena } from '../../../core/models/resena.model';
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { switchMap } from 'rxjs';
+import { forkJoin, of, switchMap } from 'rxjs';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth';
+import { UsuarioService } from '../../../core/services/usuario';
 
 @Component({
   selector: 'app-sendero-detalle',
@@ -22,6 +23,7 @@ export class SenderoDetalle implements OnInit, AfterViewInit {
   constructor(
     private senderoService: SenderoService,
     private resenaService: ResenaService,
+    private usuarioService: UsuarioService,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
@@ -36,9 +38,10 @@ export class SenderoDetalle implements OnInit, AfterViewInit {
   private dataReady = false;
   resenas: Resena[] = [];
   estaLogueado = false;
+  esFavorito = false;
+  esVisitado = false;
   resenaForm!: FormGroup;
   errorResena: string | null = null;
-
 
   ngOnInit(): void {
     this.estaLogueado = this.authService.isLoggedIn();
@@ -55,11 +58,26 @@ export class SenderoDetalle implements OnInit, AfterViewInit {
         this.dataReady = true;
         this.cdr.detectChanges();
         if (this.mapReady) this.dibujarRuta();
-        return this.resenaService.listar(id);
+
+        if (this.estaLogueado) {
+          return forkJoin({
+            resenas: this.resenaService.listar(id),
+            esFavorito: this.usuarioService.esFavorito(id),
+            esVisitado: this.usuarioService.esVisitado(id)
+          });
+        }
+
+        return forkJoin({
+          resenas: this.resenaService.listar(id),
+          esFavorito: of(false),
+          esVisitado: of(false)
+        });
       })
     ).subscribe({
-      next: (resenas) => {
-        this.resenas = resenas;
+      next: (resultado) => {
+        this.resenas = resultado.resenas;
+        this.esFavorito = resultado.esFavorito;
+        this.esVisitado = resultado.esVisitado;
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -92,22 +110,43 @@ export class SenderoDetalle implements OnInit, AfterViewInit {
 
   private dibujarRuta(): void {
     if (!this.sendero?.coordenadas?.length) return;
-
-    // El backend devuelve [lon, lat] pero Leaflet espera [lat, lon]
     const coordenadas = this.sendero.coordenadas.map(c => [c[1], c[0]] as [number, number]);
-
     const polyline = L.polyline(coordenadas, { color: '#FF5722', weight: 4 });
     polyline.addTo(this.map);
-
-    // Zoomea automáticamente para mostrar toda la ruta
     this.map.fitBounds(polyline.getBounds());
   }
 
-  enviarResena(): void {
-    console.log('enviarResena llamado');
-    console.log('form valid:', this.resenaForm.valid);
-    console.log('form value:', this.resenaForm.value);
+  toggleFavorito(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (this.esFavorito) {
+      this.usuarioService.eliminarFavorito(id).subscribe(() => {
+        this.esFavorito = false;
+        this.cdr.detectChanges();
+      });
+    } else {
+      this.usuarioService.agregarFavorito(id).subscribe(() => {
+        this.esFavorito = true;
+        this.cdr.detectChanges();
+      });
+    }
+  }
 
+  toggleVisitado(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (this.esVisitado) {
+      this.usuarioService.eliminarVisitado(id).subscribe(() => {
+        this.esVisitado = false;
+        this.cdr.detectChanges();
+      });
+    } else {
+      this.usuarioService.agregarVisitado(id).subscribe(() => {
+        this.esVisitado = true;
+        this.cdr.detectChanges();
+      });
+    }
+  }
+
+  enviarResena(): void {
     if (this.resenaForm.invalid) return;
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.resenaService.crear(id, this.resenaForm.value).subscribe({

@@ -3,6 +3,11 @@
     <span class="spacer"></span>
     <button mat-button routerLink="/">Mapa</button>
     <button mat-button routerLink="/senderos">Senderos</button>
-    <button mat-button routerLink="/perfil">Perfil</button>
-    <button mat-button (click)="logout()">Cerrar Sesión</button>
+    @if (estaLogueado) {
+        <button mat-button routerLink="/perfil">Perfil</button>
+        <button mat-button (click)="logout()">Cerrar Sesión</button>
+    } @else {
+        <button mat-button routerLink="/login">Iniciar Sesión</button>
+        <button mat-button routerLink="/register">Registrarse</button>
+    }
 </mat-toolbar>
