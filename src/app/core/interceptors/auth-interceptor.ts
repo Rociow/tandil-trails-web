@@ -1,4 +1,5 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpInterceptorFn, HttpErrorResponse  } from '@angular/common/http';
+import { catchError, throwError } from 'rxjs';
 
 /*
 @param req — el request HTTP que está a punto de salir
@@ -15,7 +16,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         Authorization: `Bearer ${token}`
       }
     });
-    return next(authReq);
+    return next(authReq).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 403 || error.status === 401) {
+          localStorage.removeItem('token');
+        }
+        return throwError(() => error);
+      })
+    );
   }
 
   return next(req);

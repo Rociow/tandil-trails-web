@@ -11,6 +11,7 @@ import { forkJoin, of, switchMap } from 'rxjs';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth';
 import { UsuarioService } from '../../../core/services/usuario';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sendero-detalle',
@@ -25,6 +26,7 @@ export class SenderoDetalle implements OnInit, AfterViewInit {
     private resenaService: ResenaService,
     private usuarioService: UsuarioService,
     private route: ActivatedRoute,
+    private router: Router,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
     private authService: AuthService,
@@ -114,6 +116,10 @@ export class SenderoDetalle implements OnInit, AfterViewInit {
     const polyline = L.polyline(coordenadas, { color: '#FF5722', weight: 4 });
     polyline.addTo(this.map);
     this.map.fitBounds(polyline.getBounds());
+  }
+
+  volver(): void {
+    this.router.navigate(['/']);
   }
 
   toggleFavorito(): void {
