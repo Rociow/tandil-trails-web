@@ -1,13 +1,57 @@
-<mat-toolbar>
-    <span>Tandil Trails</span>
-    <span class="spacer"></span>
+<mat-toolbar class="navbar">
+
+  <div class="nav-left">
+    <span class="logo" routerLink="/">Tandil Trails</span>
+  </div>
+
+  <div class="nav-center">
+    <mat-form-field
+      appearance="outline"
+      class="search-field"
+      subscriptSizing="dynamic">
+
+      <mat-icon matPrefix>search</mat-icon>
+
+      <input
+        matInput
+        placeholder="Buscar senderos..."
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="buscar()">
+
+    </mat-form-field>
+  </div>
+
+  <div class="nav-right">
     <button mat-button routerLink="/">Mapa</button>
     <button mat-button routerLink="/senderos">Senderos</button>
+
     @if (logueado$ | async) {
-    <button mat-button routerLink="/perfil">Perfil</button>
-    <button mat-button (click)="logout()">Cerrar Sesión</button>
+
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="userMenu">
+
+        <div class="avatar">
+          {{ userInitials }}
+        </div>
+
+      </button>
+
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item routerLink="/perfil">
+          Perfil
+        </button>
+
+        <button mat-menu-item (click)="logout()">
+          Cerrar sesión
+        </button>
+      </mat-menu>
+
     } @else {
-    <button mat-button routerLink="/login">Iniciar Sesión</button>
-    <button mat-button routerLink="/register">Registrarse</button>
+      <button mat-button routerLink="/login">Iniciar sesión</button>
+      <button mat-button routerLink="/register">Registrarse</button>
     }
+
+  </div>
+
 </mat-toolbar>
