@@ -5,53 +5,43 @@
   </div>
 
   <div class="nav-center">
-    <mat-form-field
-      appearance="outline"
-      class="search-field"
-      subscriptSizing="dynamic">
-
+    <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
       <mat-icon matPrefix>search</mat-icon>
-
-      <input
-        matInput
-        placeholder="Buscar senderos..."
-        [(ngModel)]="searchTerm"
-        (keyup.enter)="buscar()">
-
+      <input matInput placeholder="Buscar senderos..." [(ngModel)]="searchTerm" (keyup.enter)="buscar()">
     </mat-form-field>
   </div>
+<div class="nav-right">
+  <button mat-button routerLink="/" class="desktop-links">Mapa</button>
+  <button mat-button routerLink="/senderos" class="desktop-links">Senderos</button>
 
-  <div class="nav-right">
-    <button mat-button routerLink="/">Mapa</button>
-    <button mat-button routerLink="/senderos">Senderos</button>
+  <!-- Hamburguesa primero -->
+  <button mat-icon-button class="hamburger" [matMenuTriggerFor]="mobileMenu">
+    <mat-icon>menu</mat-icon>
+  </button>
 
+  <mat-menu #mobileMenu="matMenu">
+    <button mat-menu-item routerLink="/">Mapa</button>
+    <button mat-menu-item routerLink="/senderos">Senderos</button>
     @if (logueado$ | async) {
-
-      <button
-        mat-icon-button
-        [matMenuTriggerFor]="userMenu">
-
-        <div class="avatar">
-          {{ userInitials }}
-        </div>
-
-      </button>
-
-      <mat-menu #userMenu="matMenu">
-        <button mat-menu-item routerLink="/perfil">
-          Perfil
-        </button>
-
-        <button mat-menu-item (click)="logout()">
-          Cerrar sesión
-        </button>
-      </mat-menu>
-
+      <button mat-menu-item routerLink="/perfil">Perfil</button>
+      <button mat-menu-item (click)="logout()">Cerrar sesión</button>
     } @else {
-      <button mat-button routerLink="/login">Iniciar sesión</button>
-      <button mat-button routerLink="/register">Registrarse</button>
+      <button mat-menu-item routerLink="/login">Iniciar sesión</button>
+      <button mat-menu-item routerLink="/register">Registrarse</button>
     }
+  </mat-menu>
 
-  </div>
-
-</mat-toolbar>
+  <!-- Avatar después -->
+  @if (logueado$ | async) {
+    <button mat-icon-button [matMenuTriggerFor]="userMenu">
+      <div class="avatar">{{ userInitials }}</div>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item routerLink="/perfil">Perfil</button>
+      <button mat-menu-item (click)="logout()">Cerrar sesión</button>
+    </mat-menu>
+  } @else {
+    <button mat-button routerLink="/login" class="desktop-links">Iniciar sesión</button>
+    <button mat-button routerLink="/register" class="desktop-links">Registrarse</button>
+  }
+</div>
