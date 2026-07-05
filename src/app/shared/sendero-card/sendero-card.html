@@ -1,14 +1,16 @@
-<mat-card class="sendero-card" [routerLink]="['/sendero', sendero.id]" style="cursor: pointer">
-  @if (sendero.imagenUrl) {
+<mat-card class="sendero-card" [class.compacto]="compacto" [routerLink]="['/sendero', sendero.id]" style="cursor: pointer">
+  @if (!compacto && sendero.imagenUrl) {
     <img [src]="sendero.imagenUrl" alt="imagen del sendero" class="card-imagen">
   }
   <mat-card-header>
     <mat-card-title>{{ sendero.nombre }}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <p>{{ sendero.descripcion }}</p>
+    @if (!compacto) {
+      <p>{{ sendero.descripcion }}</p>
+      <p>Estado: {{ sendero.estado.nombre }}</p>
+    }
     <p>Longitud: {{ sendero.longitud }} km</p>
     <p>Dificultad: {{ sendero.dificultad }}</p>
-    <p>Estado: {{ sendero.estado.nombre }}</p>
   </mat-card-content>
 </mat-card>

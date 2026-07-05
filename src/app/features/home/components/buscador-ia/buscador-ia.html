@@ -1,0 +1,32 @@
+<div class="search-wrapper">
+  <div class="search-label">
+    <mat-icon style="font-size: 14px; height: 14px; width: 14px;">auto_awesome</mat-icon>
+    Búsqueda inteligente
+  </div>
+  
+  <mat-form-field appearance="outline" style="width: 100%">
+    <input matInput 
+      placeholder="ej: algo fácil con linda vista..." 
+      [(ngModel)]="query"
+      (keyup.enter)="buscar()">
+    <button mat-icon-button matSuffix (click)="buscar()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
+
+  @if (cargando) {
+    <div style="text-align: center; padding: 8px;">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  } @else if (busquedaRealizada) {
+    @if (senderos.length > 0) {
+      <div class="senderos-list">
+        @for (sendero of senderos; track sendero.id) {
+          <app-sendero-card [sendero]="sendero" [compacto]="true" />
+        }
+      </div>
+    } @else {
+      <p class="no-resultados">No encontramos senderos que coincidan.</p>
+    }
+  }
+</div>

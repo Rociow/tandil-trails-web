@@ -11,4 +11,5 @@ import { RouterLink } from '@angular/router';
 })
 export class SenderoCard {
   @Input() sendero!: SenderoResumen;
+  @Input() compacto = false;
 }

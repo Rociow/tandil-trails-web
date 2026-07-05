@@ -3,10 +3,11 @@ import { SenderoService } from '../../../core/services/sendero';
 import { Navbar } from '../../../shared/navbar/navbar';
 import { Router } from '@angular/router';
 import * as L from 'leaflet';
+import { BuscadorIa } from '../components/buscador-ia/buscador-ia';
 
 @Component({
   selector: 'app-home',
-  imports: [Navbar],
+  imports: [Navbar, BuscadorIa],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
