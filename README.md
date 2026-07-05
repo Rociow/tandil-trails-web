@@ -1,59 +1,105 @@
-# TandilTrailsWeb
+# Tandil Trails Web
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.3.
+Frontend web application for **Tandil Trails**, a platform to discover hiking trails in Tandil, Argentina. Built with Angular and Angular Material, featuring interactive maps and an AI-powered natural language trail search.
 
-## Development server
+> ⚙️ Looking for the backend? Check out [tandil-trails-api](https://github.com/Rociow/tandil-trails-api).
 
-To start a local development server, run:
+## Features
 
-```bash
-ng serve
+- **Authentication** — login and registration flows, with route protection via an auth guard and automatic token attachment through an HTTP interceptor.
+- **Interactive trail map** — trail routes and waypoints rendered on an interactive map using Leaflet.
+- **Natural language search** — a dedicated search component (`buscador-ia`) lets users describe what they're looking for in plain language (e.g. *"a short, easy trail"*), which the backend translates into structured filters using an LLM.
+- **Trail listing & detail views** — browse all trails and view details for a specific one, including reviews, waypoints, and images.
+- **User profile** (protected route) — manage favorite and visited trails.
+- **Responsive UI** built with Angular Material, using a custom Cyan/Orange theme.
+- **Standalone components** architecture (Angular 21) with lazy-loaded routes.
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Angular 21 (standalone components) |
+| UI Library | Angular Material |
+| Maps | Leaflet |
+| Styling | SCSS |
+| HTTP | Angular `HttpClient` with interceptors |
+| Testing | Vitest |
+| Package Manager | npm |
+
+## Application Structure
+
+```
+src/app/
+├── core/
+│   ├── guards/         # Route guards (auth-guard)
+│   ├── interceptors/   # HTTP interceptors (auth token attachment)
+│   ├── models/         # TypeScript interfaces (sendero, usuario, resena, etc.)
+│   └── services/       # API communication services
+├── features/
+│   ├── auth/            # Login & register
+│   ├── home/            # Landing page + AI-powered search (buscador-ia)
+│   ├── senderos/         # Trail list & trail detail
+│   └── perfil/           # User profile (protected)
+└── shared/
+    ├── navbar/           # App navigation bar
+    └── sendero-card/     # Reusable trail card component
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Getting Started
 
-## Code scaffolding
+### Prerequisites
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- Node.js (LTS recommended) and npm
+- The [tandil-trails-api](https://github.com/Rociow/tandil-trails-api) backend running locally (default: `http://localhost:8080`)
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### 1. Clone the repository
 
 ```bash
-ng generate --help
+git clone https://github.com/Rociow/tandil-trails-web.git
+cd tandil-trails-web
 ```
 
-## Building
-
-To build the project run:
+### 2. Install dependencies
 
 ```bash
-ng build
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### 3. Configure the environment
 
-## Running unit tests
+The API base URL is set in `src/environments/environment.ts` (used for development builds):
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+```ts
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:8080'
+};
+```
+
+Update `apiUrl` if your backend runs on a different host or port.
+
+### 4. Run the development server
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+Navigate to `http://localhost:4200/`. The app will automatically reload on source changes.
 
-For end-to-end (e2e) testing, run:
+### Running tests
 
 ```bash
-ng e2e
+npm test
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Building for production
 
-## Additional Resources
+```bash
+npm run build
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Build artifacts are output to the `dist/` directory.
+
+## License
+
+This project was built for educational and portfolio purposes.
